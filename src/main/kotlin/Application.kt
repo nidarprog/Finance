@@ -12,6 +12,9 @@ import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.http.HttpStatusCode
+import com.finance.model.CreateAccountRequest
+import io.ktor.server.request.receive
+import io.ktor.server.routing.post
 
 
 fun main() {
@@ -55,6 +58,12 @@ fun main() {
                     return@get
                 }
                 call.respond(account)
+            }
+
+            post("/accounts"){
+                val request = call.receive<CreateAccountRequest>()
+                val account = accountService.createAccount(request)
+                call.respond(HttpStatusCode.Created, account)
             }
         }
     }.start(wait = true)
