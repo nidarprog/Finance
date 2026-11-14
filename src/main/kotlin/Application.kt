@@ -11,6 +11,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.http.HttpStatusCode
 
 
 fun main() {
@@ -32,6 +33,28 @@ fun main() {
 
             get("/accounts"){
                 call.respond(accountService.getAllAccounts())
+            }
+
+            get("/accounts/{id}"){
+                val id = call.parameters["id"]?.toIntOrNull()
+
+                if(id == null){
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        "Invalid account ID"
+                    )
+                    return@get
+                }
+
+                val account = accountService.getAccountById(id)
+                if (account == null){
+                    call.respond(
+                        HttpStatusCode.NotFound,
+                        "Account not found"
+                    )
+                    return@get
+                }
+                call.respond(account)
             }
         }
     }.start(wait = true)
