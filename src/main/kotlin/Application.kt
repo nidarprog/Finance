@@ -1,6 +1,7 @@
 package com.finance
 
 import com.finance.model.Account
+import com.finance.service.AccountService
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.routing.routing
@@ -13,6 +14,8 @@ import io.ktor.serialization.kotlinx.json.json
 
 
 fun main() {
+
+    val accountService = AccountService()
     embeddedServer(
         Netty,
         port = 8080,
@@ -28,11 +31,7 @@ fun main() {
             }
 
             get("/accounts"){
-                val accounts = listOf(
-                    Account(1, "Checking", 1000.54),
-                    Account(2,"Saving", 350.0)
-                )
-                call.respond(accounts)
+                call.respond(accountService.getAllAccounts())
             }
         }
     }.start(wait = true)
