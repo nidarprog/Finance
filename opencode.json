@@ -29,7 +29,18 @@
   },
   "model": "ollama/qwen3:8b",
   "permission": {
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
     "edit": "ask",
-    "bash": "ask"
+    "bash": {
+      "*": "ask",
+      "git status": "allow",
+      "git diff": "allow",
+      "git diff *": "allow",
+      "git log *": "allow"
+    },
+    "external_directory": "ask"
   }
 }
